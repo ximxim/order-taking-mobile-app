@@ -1,0 +1,16 @@
+:root ._dsp-flex{display:flex;}
+:root ._ai-stretch{align-items:stretch;}
+:root ._fd-row{flex-direction:row;}
+:root ._fb-auto{flex-basis:auto;}
+:root ._bxs-border-box{box-sizing:border-box;}
+:root ._pos-relative{position:relative;}
+:root ._mih-0px{min-height:0px;}
+:root ._miw-0px{min-width:0px;}
+:root ._fs-0{flex-shrink:0;}
+:root ._jc-center{justify-content:center;}
+:root ._fd-column{flex-direction:column;}
+:root ._fs-1{flex-shrink:1;}
+:root ._fg-1{flex-grow:1;}
+:root ._gap-4px{gap:4px;}
+:root ._maw-600px{max-width:600px;}
+:root ._pb-100px{padding-bottom:100px;}

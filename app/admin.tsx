@@ -1,9 +1,10 @@
-import { Stack, Text } from "tamagui";
+import { Text } from "tamagui";
+import { Container } from "@/components/Container";
 
 export default function AdminScreen() {
   return (
-    <Stack>
+    <Container>
       <Text>Admin Screen</Text>
-    </Stack>
+    </Container>
   );
 }

@@ -1,3 +1,5 @@
+import { Container } from "@/components/Container";
+
 export default function MenuScreen() {
-  return null;
+  return <Container>{/** comment */}</Container>;
 }

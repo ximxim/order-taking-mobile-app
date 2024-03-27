@@ -1,12 +1,13 @@
+import { Container } from "@/components/Container";
 import { useRouter } from "expo-router";
-import { Stack, Text } from "tamagui";
+import { Text } from "tamagui";
 
 export default function ThankYouScreen() {
   const router = useRouter();
 
   return (
-    <Stack>
+    <Container>
       <Text>Thank You Screen</Text>
-    </Stack>
+    </Container>
   );
 }

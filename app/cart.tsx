@@ -1,13 +1,14 @@
+import { Container } from "@/components/Container";
 import { useRouter } from "expo-router";
-import { Button, Stack, Text } from "tamagui";
+import { Button, Text } from "tamagui";
 
 export default function CartScreen() {
   const router = useRouter();
 
   return (
-    <Stack>
+    <Container>
       <Text>Cart Screen</Text>
       <Button onPress={() => router.replace("/checkout")}>Next</Button>
-    </Stack>
+    </Container>
   );
 }
