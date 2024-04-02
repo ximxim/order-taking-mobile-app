@@ -27,6 +27,7 @@
     "expo-web-browser": "~12.8.2",
     "firebase": "^10.9.0",
     "react": "18.2.0",
+    "react-admin": "^4.16.14",
     "react-dom": "18.2.0",
     "react-native": "0.73.6",
     "react-native-safe-area-context": "4.8.2",
