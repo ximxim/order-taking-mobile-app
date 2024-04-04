@@ -13,7 +13,7 @@ const {
   EXPO_PUBLIC_MEASUREMENT_ID,
 } = process.env;
 
-const firebaseOptions: FirebaseOptions = {
+export const firebaseOptions: FirebaseOptions = {
 	apiKey: EXPO_PUBLIC_API_KEY,
   authDomain: EXPO_PUBLIC_AUTH_DOMAIN,
   projectId: EXPO_PUBLIC_PROJECT_ID,
