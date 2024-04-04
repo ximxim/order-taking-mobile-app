@@ -1,5 +1,9 @@
 import { ListGuesser, Admin as RAAdmin, Resource } from "react-admin";
-import { RAFirebaseOptions, FirebaseDataProvider } from "react-admin-firebase";
+import {
+  RAFirebaseOptions,
+  FirebaseDataProvider,
+  FirebaseAuthProvider,
+} from "react-admin-firebase";
 import { firebaseOptions } from "@/utils/firebase";
 
 const options: RAFirebaseOptions = {
@@ -12,10 +16,11 @@ const options: RAFirebaseOptions = {
 };
 
 const dataProvider = FirebaseDataProvider(firebaseOptions, options);
+const authProvider = FirebaseAuthProvider(firebaseOptions, {});
 
 export default function AdminScreen() {
   return (
-    <RAAdmin dataProvider={dataProvider}>
+    <RAAdmin dataProvider={dataProvider} authProvider={authProvider}>
       <Resource name="orders" list={ListGuesser} />
     </RAAdmin>
   );
