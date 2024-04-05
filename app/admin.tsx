@@ -5,6 +5,7 @@ import {
   FirebaseAuthProvider,
 } from "react-admin-firebase";
 import { firebaseOptions } from "@/utils/firebase";
+import { CategoryEntity } from "@/components/admin/category";
 
 const options: RAFirebaseOptions = {
   logging: true,
@@ -21,7 +22,7 @@ const authProvider = FirebaseAuthProvider(firebaseOptions, {});
 export default function AdminScreen() {
   return (
     <RAAdmin dataProvider={dataProvider} authProvider={authProvider}>
-      <Resource name="orders" list={ListGuesser} />
+      <Resource {...CategoryEntity} />
     </RAAdmin>
   );
 }
