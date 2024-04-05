@@ -8,14 +8,19 @@ import {
   SimpleForm,
   TextInput,
   required,
+  ImageInput,
+  ImageField,
 } from "react-admin";
 
 const CategoryCreate = () => {
   return (
     <Create>
-      <SimpleForm>
-        <TextInput source="title" validate={[required()]} />
-        <TextInput source="description" />
+      <SimpleForm sanitizeEmptyValues>
+        <ImageInput source="image" label="Image">
+          <ImageField source="src" title="title" />
+        </ImageInput>
+        <TextInput source="title" validate={[required()]} fullWidth />
+        <TextInput source="description" fullWidth />
       </SimpleForm>
     </Create>
   );
@@ -25,6 +30,7 @@ const CategoryList = () => {
   return (
     <List>
       <Datagrid>
+        <ImageField source="image.src" />
         <TextField source="id" />
         <TextField source="title" />
         <DateField source="createdate" />
