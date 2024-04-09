@@ -22,9 +22,11 @@ const authProvider = FirebaseAuthProvider(firebaseOptions, {});
 
 export default function AdminScreen() {
   return (
-    <RAAdmin dataProvider={dataProvider} authProvider={authProvider}>
-      <Resource {...CategoryEntity} />
-      <Resource {...ItemEntity} />
-    </RAAdmin>
+    <div style={{ overflow: "scroll" }}>
+      <RAAdmin dataProvider={dataProvider} authProvider={authProvider}>
+        <Resource {...CategoryEntity} />
+        <Resource {...ItemEntity} />
+      </RAAdmin>
+    </div>
   );
 }

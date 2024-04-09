@@ -13,6 +13,10 @@ import {
   Edit,
   NumberField,
   NumberInput,
+  ReferenceInput,
+  SelectInput,
+  ReferenceField,
+  ChipField,
 } from "react-admin";
 
 const ItemForm = () => {
@@ -21,6 +25,9 @@ const ItemForm = () => {
       <ImageInput source="image" label="Image">
         <ImageField source="src" title="title" />
       </ImageInput>
+      <ReferenceInput source="category" reference="category">
+        <SelectInput optionText="title" fullWidth />
+      </ReferenceInput>
       <TextInput source="label" validate={[required()]} fullWidth />
       <TextInput source="description" fullWidth />
       <NumberInput source="price" fullWidth />
@@ -56,6 +63,9 @@ const ItemList = () => {
         <TextField source="id" />
         <TextField source="label" />
         <NumberField source="price" />
+        <ReferenceField source="category" reference="category">
+          <ChipField source="title" />
+        </ReferenceField>
         <DateField source="createdate" />
         <DateField source="lastupdate" />
       </Datagrid>
