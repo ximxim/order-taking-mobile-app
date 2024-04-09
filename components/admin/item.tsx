@@ -17,6 +17,10 @@ import {
   SelectInput,
   ReferenceField,
   ChipField,
+  ArrayInput,
+  SimpleFormIterator,
+  BooleanInput,
+  number,
 } from "react-admin";
 
 const ItemForm = () => {
@@ -26,11 +30,24 @@ const ItemForm = () => {
         <ImageField source="src" title="title" />
       </ImageInput>
       <ReferenceInput source="category" reference="category">
-        <SelectInput optionText="title" fullWidth />
+        <SelectInput optionText="title" fullWidth validate={[required()]} />
       </ReferenceInput>
       <TextInput source="label" validate={[required()]} fullWidth />
       <TextInput source="description" fullWidth />
-      <NumberInput source="price" fullWidth />
+      <NumberInput source="price" validate={[required(), number()]} fullWidth />
+      <ArrayInput source="variants">
+        <SimpleFormIterator fullWidth>
+          <TextInput source="type" helperText={false} fullWidth />
+          <ArrayInput source="choices">
+            <SimpleFormIterator inline>
+              <TextInput source="label" />
+              <NumberInput source="price" defaultValue={0} />
+            </SimpleFormIterator>
+          </ArrayInput>
+          <BooleanInput source="allowMultiple" helperText={false} fullWidth />
+          <BooleanInput source="isRequired" helperText={false} fullWidth />
+        </SimpleFormIterator>
+      </ArrayInput>
     </>
   );
 };
