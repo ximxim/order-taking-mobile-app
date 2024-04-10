@@ -1,4 +1,9 @@
+:root ._col-675002279{color:var(--color);}
 :root ._ff-299667014{font-family:var(--f-fa);}
+:root ._fow-233016140{font-weight:var(--f-we-4);}
+:root ._ls-167744059{letter-spacing:var(--f-21-4);}
+:root ._fos-229441220{font-size:var(--f-si-4);}
+:root ._lh-222976573{line-height:var(--f-li-4);}
 :root ._dsp-inline{display:inline;}
 :root ._bxs-border-box{box-sizing:border-box;}
 :root ._ww-break-word{word-wrap:break-word;}
@@ -7,4 +12,4 @@
 :root ._mr-0px{margin-right:0px;}
 :root ._mb-0px{margin-bottom:0px;}
 :root ._ml-0px{margin-left:0px;}
-:root ._col-675002279{color:var(--color);}
+:root ._ussel-auto{user-select:auto;-webkit-user-select:auto;}
