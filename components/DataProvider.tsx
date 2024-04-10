@@ -7,12 +7,15 @@ import {
   useState,
 } from "react";
 import { Spinner, YStack } from "tamagui";
-import { db } from "@/utils/firebase";
-import { getDoc, getDocs, doc } from "firebase/firestore";
-import { IRestraunt } from "@/models";
+import { db, auth } from "@/utils/firebase";
+import { getDoc, getDocs, doc, collection } from "firebase/firestore";
+import { signInAnonymously } from "firebase/auth";
+import { ICategory, IItem, IRestraunt } from "@/models";
 
 interface IDataProviderContextProps {
   restaurantInfo?: IRestraunt;
+  items?: IItem[];
+  categories?: ICategory[];
 }
 
 const DataProviderContext = createContext<IDataProviderContextProps>({});
@@ -22,6 +25,26 @@ export const useDataProvider = () => useContext(DataProviderContext);
 export const DataProvider: FC<PropsWithChildren> = ({ children }) => {
   const [isReady, setIsReady] = useState(false);
   const [restaurantInfo, setRestaurantInfo] = useState<IRestraunt>();
+  const [items, setItems] = useState<IItem[]>([]);
+  const [categories, setCategories] = useState<ICategory[]>([]);
+
+  const fetchItems = async () => {
+    const itemCollectionRef = collection(db, "item");
+    const snapshot = await getDocs(itemCollectionRef);
+    const tempItems: IItem[] = [];
+    snapshot.forEach((item) => tempItems.push(item.data() as IItem));
+    setItems(tempItems);
+  };
+
+  const fetchCategories = async () => {
+    const categoryCollectionRef = collection(db, "category");
+    const snapshot = await getDocs(categoryCollectionRef);
+    const tempCategories: ICategory[] = [];
+    snapshot.forEach((category) =>
+      tempCategories.push(category.data() as ICategory)
+    );
+    setCategories(tempCategories);
+  };
 
   const fetchRestaurantInfo = async () => {
     const restaurantInfoRef = doc(db, "restaurant", "info");
@@ -30,7 +53,10 @@ export const DataProvider: FC<PropsWithChildren> = ({ children }) => {
   };
 
   const fetchData = async () => {
+    await signInAnonymously(auth);
     await fetchRestaurantInfo();
+    await fetchItems();
+    await fetchCategories();
     setIsReady(true);
   };
 
@@ -42,6 +68,8 @@ export const DataProvider: FC<PropsWithChildren> = ({ children }) => {
     <DataProviderContext.Provider
       value={{
         restaurantInfo,
+        items,
+        categories,
       }}
     >
       {isReady ? (

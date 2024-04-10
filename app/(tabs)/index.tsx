@@ -3,10 +3,12 @@ import { useDataProvider } from "@/components/DataProvider";
 import { Text } from "tamagui";
 
 export default function MenuScreen() {
-  const { restaurantInfo } = useDataProvider();
+  const { categories } = useDataProvider();
   return (
     <Container>
-      <Text>{restaurantInfo?.name}</Text>
+      {categories?.map((category) => (
+        <Text>{category?.title}</Text>
+      ))}
     </Container>
   );
 }
