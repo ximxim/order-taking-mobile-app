@@ -7,20 +7,43 @@ import {
   useState,
 } from "react";
 import { Spinner, YStack } from "tamagui";
+import { db } from "@/utils/firebase";
+import { getDoc, getDocs, doc } from "firebase/firestore";
+import { IRestraunt } from "@/models";
 
-const DataProviderContext = createContext({});
+interface IDataProviderContextProps {
+  restaurantInfo?: IRestraunt;
+}
+
+const DataProviderContext = createContext<IDataProviderContextProps>({});
 
 export const useDataProvider = () => useContext(DataProviderContext);
 
 export const DataProvider: FC<PropsWithChildren> = ({ children }) => {
   const [isReady, setIsReady] = useState(false);
+  const [restaurantInfo, setRestaurantInfo] = useState<IRestraunt>();
+
+  const fetchRestaurantInfo = async () => {
+    const restaurantInfoRef = doc(db, "restaurant", "info");
+    const snapshot = await getDoc(restaurantInfoRef);
+    setRestaurantInfo(snapshot.data() as IRestraunt);
+  };
+
+  const fetchData = async () => {
+    await fetchRestaurantInfo();
+    setIsReady(true);
+  };
 
   useEffect(() => {
-    setIsReady(true);
+    fetchData();
   }, []);
 
   return (
-    <DataProviderContext.Provider value={{}}>
+    <DataProviderContext.Provider
+      value={{
+        restaurantInfo,
+      }}
+    >
       {isReady ? (
         children
       ) : (
