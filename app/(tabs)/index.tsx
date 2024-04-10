@@ -1,9 +1,10 @@
 import { Container } from "@/components/Container";
 import { useDataProvider } from "@/components/DataProvider";
-import { Accordion, Paragraph, Text } from "tamagui";
+import { Accordion, Avatar, ListItem, Paragraph, Text } from "tamagui";
+import { router } from "expo-router";
 
 export default function MenuScreen() {
-  const { categories } = useDataProvider();
+  const { categories, getItemByCategory } = useDataProvider();
 
   if (!categories) return null;
 
@@ -21,7 +22,20 @@ export default function MenuScreen() {
               <Paragraph>{category.title}</Paragraph>
             </Accordion.Trigger>
             <Accordion.Content p={0}>
-              <Text>This is fake content</Text>
+              {getItemByCategory(category.id).map((item) => (
+                <ListItem
+                  hoverTheme
+                  onPress={() => router.push(`/item/${item.id}`)}
+                  icon={
+                    <Avatar circular size="$2">
+                      <Avatar.Image src={item?.image?.src} />
+                    </Avatar>
+                  }
+                  iconAfter={<Paragraph>${item.price}</Paragraph>}
+                >
+                  {item.label}
+                </ListItem>
+              ))}
             </Accordion.Content>
           </Accordion.Item>
         ))}

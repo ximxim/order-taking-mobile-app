@@ -16,9 +16,12 @@ interface IDataProviderContextProps {
   restaurantInfo?: IRestraunt;
   items?: IItem[];
   categories?: ICategory[];
+  getItemByCategory: (categoryId: string) => IItem[];
 }
 
-const DataProviderContext = createContext<IDataProviderContextProps>({});
+const DataProviderContext = createContext<IDataProviderContextProps>({
+  getItemByCategory: () => [],
+});
 
 export const useDataProvider = () => useContext(DataProviderContext);
 
@@ -60,6 +63,10 @@ export const DataProvider: FC<PropsWithChildren> = ({ children }) => {
     setIsReady(true);
   };
 
+  const getItemByCategory = (categoryId: string): IItem[] => {
+    return items.filter((item) => item.category === categoryId);
+  };
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -70,6 +77,7 @@ export const DataProvider: FC<PropsWithChildren> = ({ children }) => {
         restaurantInfo,
         items,
         categories,
+        getItemByCategory,
       }}
     >
       {isReady ? (
