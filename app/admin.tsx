@@ -1,7 +1,9 @@
 import {
+  AppBar,
   CustomRoutes,
-  ListGuesser,
+  Layout,
   Admin as RAAdmin,
+  RefreshIconButton,
   Resource,
 } from "react-admin";
 import {
@@ -14,6 +16,8 @@ import { CategoryEntity } from "@/components/admin/category";
 import { ItemEntity } from "@/components/admin/item";
 import { Route } from "react-router-dom";
 import { StoreInfo } from "@/components/admin/StoreInfo";
+import { IconButton } from "@mui/material";
+import SettingsIcon from "@mui/icons-material/Settings";
 
 const options: RAFirebaseOptions = {
   logging: true,
@@ -27,10 +31,29 @@ const options: RAFirebaseOptions = {
 const dataProvider = FirebaseDataProvider(firebaseOptions, options);
 const authProvider = FirebaseAuthProvider(firebaseOptions, {});
 
+const MyAppBar = () => (
+  <AppBar
+    toolbar={
+      <>
+        <RefreshIconButton />
+        <IconButton href="/admin#/info">
+          <SettingsIcon style={{ color: "white" }} />
+        </IconButton>
+      </>
+    }
+  />
+);
+
+const MyLayout = (props: any) => <Layout {...props} appBar={MyAppBar} />;
+
 export default function AdminScreen() {
   return (
     <div style={{ overflow: "scroll" }}>
-      <RAAdmin dataProvider={dataProvider} authProvider={authProvider}>
+      <RAAdmin
+        layout={MyLayout}
+        dataProvider={dataProvider}
+        authProvider={authProvider}
+      >
         <Resource {...CategoryEntity} />
         <Resource {...ItemEntity} />
         <CustomRoutes>
