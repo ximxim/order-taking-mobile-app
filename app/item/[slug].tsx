@@ -40,19 +40,32 @@ const Variant: FC<IVariantProps> = ({ variant }) => {
     control,
     name: "value",
   });
-  console.log("fields", fields);
-  const handleValueChange = (index: string) => {
+  const handleValueChange = (index: string | string[]) => {
     const removeAll = fields.reduce((acc, field: any, index) => {
       if (field.variant !== variant.type) return acc;
       return [...acc, index];
     }, [] as number[]);
     remove(removeAll);
-    const currIndex = parseInt(index.split(":")[1]);
-    append({
-      variant: variant.type,
-      price: variant.choices[currIndex].price,
-      value: variant.choices[currIndex].label,
-    });
+    if (Array.isArray(index)) {
+      const currIndexs = index
+        .filter((i) => !!i)
+        .map((i) => parseInt(i.split(":")[1]));
+
+      currIndexs.forEach((i) =>
+        append({
+          price: variant.choices[i].price,
+          value: variant.choices[i].label,
+          variant: variant.type,
+        })
+      );
+    } else {
+      const currIndex = parseInt(index.split(":")[1]);
+      append({
+        variant: variant.type,
+        price: variant.choices[currIndex].price,
+        value: variant.choices[currIndex].label,
+      });
+    }
   };
   return (
     <YStack>
@@ -65,8 +78,20 @@ const Variant: FC<IVariantProps> = ({ variant }) => {
         )}
       </Label>
       <ToggleGroup
-        type="single"
-        disableDeactivation
+        {...(variant.allowMultiple
+          ? {
+              type: "multiple",
+              defaultValue: variant.isRequired
+                ? [`${variant.type}:0`]
+                : undefined,
+            }
+          : {
+              type: "single",
+              disableDeactivation: true,
+              defaultValue: variant.isRequired
+                ? `${variant.type}:0`
+                : undefined,
+            })}
         onValueChange={handleValueChange}
       >
         <YStack alignItems="flex-start">
@@ -118,13 +143,29 @@ export default function ItemScreen() {
       label: item?.label,
     },
   });
-  const { register, handleSubmit } = methods;
+  const { register, handleSubmit, control } = methods;
+  const { append } = useFieldArray<ILine, "value">({
+    control,
+    name: "value",
+  });
 
   useEffect(() => {
     if (!item) return;
     setOptions({
       title: item.label,
     });
+
+    if (!item.variants.length) return;
+
+    item.variants
+      .filter((variant) => variant.isRequired)
+      .forEach((variant) =>
+        append({
+          price: variant.choices[0].price,
+          value: variant.choices[0].label,
+          variant: variant.type,
+        })
+      );
   }, [item]);
 
   const onSubmit = (data: ILine) => {
