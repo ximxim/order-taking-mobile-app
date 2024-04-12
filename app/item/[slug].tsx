@@ -16,6 +16,7 @@ import { useDataProvider } from "@/components/DataProvider";
 import { Container } from "@/components/Container";
 import { useForm } from "react-hook-form";
 import { IChoice, ILine, IVariant } from "@/models";
+import { Circle } from "@tamagui/lucide-icons";
 
 interface IVariantProps {
   variant: IVariant;
@@ -49,15 +50,17 @@ const Variant: FC<IVariantProps> = ({ variant }) => {
   );
 };
 
-const Choice: FC<IChoiceProps> = ({ choice }) => {
+const Choice: FC<IChoiceProps> = ({ choice, index }) => {
   return (
     <YStack px={4} py={2} mt="0px !important">
       <XStack alignItems="center" gap="$4">
-        <ToggleGroup.Item value={choice.label}></ToggleGroup.Item>
+        <ToggleGroup.Item value={choice.label}>
+          <Circle />
+        </ToggleGroup.Item>
         <Label>
           <Text>{choice.label}</Text>
           <Text ml="$2" fontSize={12}>
-            +${choice.price}
+            +${choice.price.toFixed(2)}
           </Text>
         </Label>
       </XStack>
@@ -80,11 +83,11 @@ export default function ItemScreen() {
   });
 
   useEffect(() => {
-    // TODO: replace this title with item title
+    if (!item) return;
     setOptions({
-      title: slug,
+      title: item.label,
     });
-  }, [slug]);
+  }, [item]);
 
   const onSubmit = (data: ILine) => {
     console.log("data", data);
