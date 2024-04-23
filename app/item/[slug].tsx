@@ -22,6 +22,8 @@ import {
 } from "react-hook-form";
 import { IChoice, ILine, IVariant } from "@/models";
 import { Circle, CircleDot } from "@tamagui/lucide-icons";
+import { BottomButton } from "@/components/BottomButton";
+import { calculateItemTotal } from "@/utils/calculations";
 
 interface IVariantProps {
   variant: IVariant;
@@ -133,7 +135,7 @@ const Choice: FC<IChoiceProps> = ({ choice, index, variant }) => {
 export default function ItemScreen() {
   const { slug } = useLocalSearchParams();
   const { setOptions } = useNavigation();
-  const { getItemById } = useDataProvider();
+  const { getItemById, addToCart } = useDataProvider();
   const item = getItemById(slug as string);
   const methods = useForm<ILine>({
     defaultValues: {
@@ -143,7 +145,7 @@ export default function ItemScreen() {
       label: item?.label,
     },
   });
-  const { register, handleSubmit, control } = methods;
+  const { register, handleSubmit, control, watch } = methods;
   const { append } = useFieldArray<ILine, "value">({
     control,
     name: "value",
@@ -169,44 +171,55 @@ export default function ItemScreen() {
   }, [item]);
 
   const onSubmit = (data: ILine) => {
-    console.log("data", data);
+    addToCart(data);
   };
 
   if (!item) return null;
 
   return (
-    <FormProvider {...methods}>
-      <Container>
-        <Form onSubmit={handleSubmit(onSubmit)}>
-          <YStack gap={4} p={4}>
-            <Image
-              height="280px"
-              minWidth="280px"
-              width="100%"
-              flex={1}
-              source={{ uri: item.image.src, width: 280, height: 280 }}
-            />
-            {item.variants.map((variant, index) => (
-              <Variant variant={variant} index={index} />
-            ))}
-            <YStack>
-              <Label>Special Instructions</Label>
-              <TextArea
-                placeholder="pepper / salt / cutlury..."
-                {...register("instructions")}
+    <>
+      <FormProvider {...methods}>
+        <Container>
+          <Form onSubmit={handleSubmit(onSubmit)}>
+            <YStack gap={4} p={4}>
+              <Image
+                height="280px"
+                minWidth="280px"
+                width="100%"
+                flex={1}
+                source={{ uri: item.image.src, width: 280, height: 280 }}
               />
+              {item.variants.map((variant, index) => (
+                <Variant variant={variant} index={index} />
+              ))}
+              <YStack>
+                <Label>Special Instructions</Label>
+                <TextArea
+                  placeholder="pepper / salt / cutlury..."
+                  {...register("instructions")}
+                />
+              </YStack>
+              <YStack>
+                <Label>Quantity</Label>
+                <Input
+                  keyboardType="number-pad"
+                  defaultValue="1"
+                  {...register("quantity", { valueAsNumber: true, min: 1 })}
+                />
+              </YStack>
             </YStack>
-            <YStack>
-              <Label>Quantity</Label>
-              <Input
-                keyboardType="number-pad"
-                defaultValue="1"
-                {...register("quantity", { valueAsNumber: true, min: 1 })}
-              />
-            </YStack>
-          </YStack>
-        </Form>
-      </Container>
-    </FormProvider>
+          </Form>
+        </Container>
+      </FormProvider>
+      <BottomButton
+        label="Add to cart"
+        total={`$${calculateItemTotal(
+          item.price,
+          watch("quantity"),
+          watch("value") || []
+        ).toFixed(2)}`}
+        onClick={handleSubmit(onSubmit)}
+      />
+    </>
   );
 }

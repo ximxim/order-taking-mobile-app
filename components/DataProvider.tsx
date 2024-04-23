@@ -10,19 +10,23 @@ import { Spinner, YStack } from "tamagui";
 import { db, auth } from "@/utils/firebase";
 import { getDoc, getDocs, doc, collection } from "firebase/firestore";
 import { signInAnonymously } from "firebase/auth";
-import { ICategory, IItem, IRestraunt } from "@/models";
+import { ICategory, IItem, ILine, IRestraunt } from "@/models";
 
 interface IDataProviderContextProps {
   restaurantInfo?: IRestraunt;
   items?: IItem[];
+  lines: ILine[];
   categories?: ICategory[];
   getItemByCategory: (categoryId: string) => IItem[];
   getItemById: (itemId: string) => IItem | undefined;
+  addToCart: (line: ILine) => void;
 }
 
 const DataProviderContext = createContext<IDataProviderContextProps>({
+  lines: [],
   getItemByCategory: () => [],
   getItemById: () => undefined,
+  addToCart: () => undefined,
 });
 
 export const useDataProvider = () => useContext(DataProviderContext);
@@ -32,6 +36,7 @@ export const DataProvider: FC<PropsWithChildren> = ({ children }) => {
   const [restaurantInfo, setRestaurantInfo] = useState<IRestraunt>();
   const [items, setItems] = useState<IItem[]>([]);
   const [categories, setCategories] = useState<ICategory[]>([]);
+  const [lines, setLines] = useState<ILine[]>([]);
 
   const fetchItems = async () => {
     const itemCollectionRef = collection(db, "item");
@@ -73,6 +78,8 @@ export const DataProvider: FC<PropsWithChildren> = ({ children }) => {
     return items.find((item) => item.id === itemId);
   };
 
+  const addToCart = (line: ILine) => setLines([...lines, line]);
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -82,9 +89,11 @@ export const DataProvider: FC<PropsWithChildren> = ({ children }) => {
       value={{
         restaurantInfo,
         items,
+        lines,
         categories,
         getItemByCategory,
         getItemById,
+        addToCart,
       }}
     >
       {isReady ? (
