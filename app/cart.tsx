@@ -1,6 +1,11 @@
 import { BottomButton } from "@/components/BottomButton";
 import { Container } from "@/components/Container";
 import { useDataProvider } from "@/components/DataProvider";
+import {
+  calculateSubtotal,
+  calculateTaxes,
+  calculateTotal,
+} from "@/utils/calculations";
 import { XCircle } from "@tamagui/lucide-icons";
 import { useRouter } from "expo-router";
 import { Button, Heading, Text, XStack, YStack } from "tamagui";
@@ -45,12 +50,26 @@ export default function CartScreen() {
               </XStack>
             </XStack>
           ))}
+          <XStack justifyContent="space-between">
+            <Text fontSize={12}>Sub-Total</Text>
+            <Text fontSize={12}>${calculateSubtotal(lines).toFixed(2)}</Text>
+          </XStack>
+          <XStack justifyContent="space-between">
+            <Text fontSize={12}>Taxes (13%)</Text>
+            <Text fontSize={12}>${calculateTaxes(lines, 13).toFixed(2)}</Text>
+          </XStack>
+          <XStack justifyContent="space-between">
+            <Heading fontSize={16}>Total</Heading>
+            <Heading fontSize={16}>
+              ${calculateTotal(lines, 13).toFixed(2)}
+            </Heading>
+          </XStack>
         </YStack>
       </Container>
       <BottomButton
         onClick={() => router.replace("/checkout")}
         label="Go to checkout"
-        total="$0.00"
+        total={`$${calculateTotal(lines, 13).toFixed(2)}`}
       />
     </>
   );
