@@ -10,16 +10,18 @@ import {
   Accordion,
   Button,
   Form,
+  Input,
   Label,
   Paragraph,
   Stack,
   Text,
   TextArea,
+  YStack,
 } from "tamagui";
 
 export default function CheckoutScreen() {
   const { lines } = useDataProvider();
-  const { handleSubmit, register, setValue } = useForm<IOrder>();
+  const { handleSubmit, register, setValue, formState } = useForm<IOrder>();
   const router = useRouter();
 
   const onSubmit = (data: IOrder) => {
@@ -28,6 +30,10 @@ export default function CheckoutScreen() {
   };
 
   useEffect(() => {
+    register("firstName", { required: true });
+    register("lastName", { required: true });
+    register("email", { required: true });
+    register("phone", { required: true });
     register("comments");
   }, []);
 
@@ -46,7 +52,56 @@ export default function CheckoutScreen() {
                 <Paragraph>CONTACT</Paragraph>
               </Accordion.Trigger>
               <Accordion.Content>
-                <Paragraph>CONTACT</Paragraph>
+                <YStack mt={4}>
+                  <YStack>
+                    <Label>First Name</Label>
+                    <Input
+                      placeholder="First Name"
+                      onChangeText={(val) =>
+                        setValue("firstName", val, { shouldValidate: true })
+                      }
+                    />
+                    {!!formState?.errors?.firstName?.type && (
+                      <Text color="$red9">Required</Text>
+                    )}
+                  </YStack>
+                  <YStack>
+                    <Label>Last Name</Label>
+                    <Input
+                      placeholder="Last Name"
+                      onChangeText={(val) =>
+                        setValue("lastName", val, { shouldValidate: true })
+                      }
+                    />
+                    {!!formState?.errors?.firstName?.type && (
+                      <Text color="$red9">Required</Text>
+                    )}
+                  </YStack>
+                  <YStack>
+                    <Label>Email</Label>
+                    <Input
+                      placeholder="Email"
+                      onChangeText={(val) =>
+                        setValue("email", val, { shouldValidate: true })
+                      }
+                    />
+                    {!!formState?.errors?.firstName?.type && (
+                      <Text color="$red9">Required</Text>
+                    )}
+                  </YStack>
+                  <YStack>
+                    <Label>Phone</Label>
+                    <Input
+                      placeholder="Phone"
+                      onChangeText={(val) =>
+                        setValue("phone", val, { shouldValidate: true })
+                      }
+                    />
+                    {!!formState?.errors?.firstName?.type && (
+                      <Text color="$red9">Required</Text>
+                    )}
+                  </YStack>
+                </YStack>
               </Accordion.Content>
             </Accordion.Item>
             <Accordion.Item value="PAYMENT METHOD">
@@ -62,13 +117,15 @@ export default function CheckoutScreen() {
                 <Paragraph>COMMENTS</Paragraph>
               </Accordion.Trigger>
               <Accordion.Content>
-                <Label>Comments</Label>
-                <TextArea
-                  placeholder="Comments..."
-                  onChangeText={(val) =>
-                    setValue("comments", val, { shouldValidate: true })
-                  }
-                />
+                <YStack mt={4}>
+                  <Label>Comments</Label>
+                  <TextArea
+                    placeholder="Comments..."
+                    onChangeText={(val) =>
+                      setValue("comments", val, { shouldValidate: true })
+                    }
+                  />
+                </YStack>
               </Accordion.Content>
             </Accordion.Item>
           </Accordion>
