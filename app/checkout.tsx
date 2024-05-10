@@ -1,6 +1,7 @@
 import { BottomButton } from "@/components/BottomButton";
 import { Container } from "@/components/Container";
 import { useDataProvider } from "@/components/DataProvider";
+import { PAYMENT_METHODS } from "@/constants/PaymentMethods";
 import { IOrder } from "@/models";
 import { calculateTotal } from "@/utils/calculations";
 import { useRouter } from "expo-router";
@@ -13,14 +14,16 @@ import {
   Input,
   Label,
   Paragraph,
+  RadioGroup,
   Stack,
   Text,
   TextArea,
+  XStack,
   YStack,
 } from "tamagui";
 
 export default function CheckoutScreen() {
-  const { lines } = useDataProvider();
+  const { lines, restaurantInfo } = useDataProvider();
   const { handleSubmit, register, setValue, formState } = useForm<IOrder>();
   const router = useRouter();
 
@@ -34,6 +37,7 @@ export default function CheckoutScreen() {
     register("lastName", { required: true });
     register("email", { required: true });
     register("phone", { required: true });
+    register("paymentMethod", { required: true });
     register("comments");
   }, []);
 
@@ -109,7 +113,31 @@ export default function CheckoutScreen() {
                 <Paragraph>PAYMENT METHOD</Paragraph>
               </Accordion.Trigger>
               <Accordion.Content>
-                <Paragraph>PAYMENT METHOD</Paragraph>
+                <YStack mt={4}>
+                  <YStack>
+                    <RadioGroup
+                      onValueChange={(val) =>
+                        setValue("paymentMethod", val as any, {
+                          shouldValidate: true,
+                        })
+                      }
+                    >
+                      {restaurantInfo?.paymentMethods.map((method) => (
+                        <XStack alignItems="center" gap="$2">
+                          <RadioGroup.Item value={method}>
+                            <RadioGroup.Indicator />
+                          </RadioGroup.Item>
+                          <Label>
+                            {PAYMENT_METHODS.find((m) => m.id === method)?.name}
+                          </Label>
+                        </XStack>
+                      ))}
+                    </RadioGroup>
+                    {!!formState?.errors?.paymentMethod?.type && (
+                      <Text color="$red9">Required</Text>
+                    )}
+                  </YStack>
+                </YStack>
               </Accordion.Content>
             </Accordion.Item>
             <Accordion.Item value="COMMENTS">

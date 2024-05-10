@@ -23,3 +23,6 @@
 :root ._fs-0{flex-shrink:0;}
 :root ._mt-4px{margin-top:4px;}
 :root ._col-312414400{color:var(--red9);}
+:root ._fd-row{flex-direction:row;}
+:root ._ai-center{align-items:center;}
+:root ._gap-1481558214{gap:var(--space-7);}
