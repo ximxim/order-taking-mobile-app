@@ -24,6 +24,7 @@ interface IDataProviderContextProps {
   items?: IItem[];
   lines: ILine[];
   categories?: ICategory[];
+  order?: IOrder;
   getItemByCategory: (categoryId: string) => IItem[];
   getItemById: (itemId: string) => IItem | undefined;
   addToCart: (line: ILine) => void;
@@ -121,6 +122,7 @@ export const DataProvider: FC<PropsWithChildren> = ({ children }) => {
         items,
         lines,
         categories,
+        order,
         getItemByCategory,
         getItemById,
         addToCart,
