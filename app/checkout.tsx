@@ -23,13 +23,13 @@ import {
 } from "tamagui";
 
 export default function CheckoutScreen() {
-  const { lines, restaurantInfo } = useDataProvider();
+  const { lines, restaurantInfo, checkout } = useDataProvider();
   const { handleSubmit, register, setValue, formState } = useForm<IOrder>();
   const router = useRouter();
 
-  const onSubmit = (data: IOrder) => {
-    // TODO: navigate to thank you page once order is created
-    console.log("order", data);
+  const onSubmit = async (data: IOrder) => {
+    await checkout(data);
+    router.replace("/thankYou");
   };
 
   useEffect(() => {

@@ -7,10 +7,17 @@ import {
   useState,
 } from "react";
 import { Spinner, YStack } from "tamagui";
-import { db, auth } from "@/utils/firebase";
-import { getDoc, getDocs, doc, collection } from "firebase/firestore";
+import { db, auth, functions } from "@/utils/firebase";
+import {
+  getDoc,
+  getDocs,
+  doc,
+  collection,
+  onSnapshot,
+} from "firebase/firestore";
+import { httpsCallable } from "firebase/functions";
 import { signInAnonymously } from "firebase/auth";
-import { ICategory, IItem, ILine, IRestraunt } from "@/models";
+import { ICategory, IItem, ILine, IOrder, IRestraunt } from "@/models";
 
 interface IDataProviderContextProps {
   restaurantInfo?: IRestraunt;
@@ -21,6 +28,7 @@ interface IDataProviderContextProps {
   getItemById: (itemId: string) => IItem | undefined;
   addToCart: (line: ILine) => void;
   removeFromCart: (index: number) => void;
+  checkout: (order: IOrder) => Promise<string>;
 }
 
 const DataProviderContext = createContext<IDataProviderContextProps>({
@@ -29,6 +37,7 @@ const DataProviderContext = createContext<IDataProviderContextProps>({
   getItemById: () => undefined,
   addToCart: () => undefined,
   removeFromCart: () => undefined,
+  checkout: async () => "",
 });
 
 export const useDataProvider = () => useContext(DataProviderContext);
@@ -39,6 +48,7 @@ export const DataProvider: FC<PropsWithChildren> = ({ children }) => {
   const [items, setItems] = useState<IItem[]>([]);
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [lines, setLines] = useState<ILine[]>([]);
+  const [order, setOrder] = useState<IOrder>();
 
   const fetchItems = async () => {
     const itemCollectionRef = collection(db, "item");
@@ -85,6 +95,21 @@ export const DataProvider: FC<PropsWithChildren> = ({ children }) => {
   const removeFromCart = (itemToRemoveIndex: number) =>
     setLines(lines.filter((_, index) => index !== itemToRemoveIndex));
 
+  const checkout = async (order: IOrder) => {
+    const placeOrder = httpsCallable<IOrder, { id: string; order: IOrder }>(
+      functions,
+      "placeorder"
+    );
+    const { data } = await placeOrder({ ...order, lines });
+    setLines([]);
+    setOrder(data.order);
+    onSnapshot(doc(db, "orders", data.id), (docSnapshot) => {
+      setOrder(docSnapshot.data() as IOrder);
+    });
+
+    return data.id;
+  };
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -100,6 +125,7 @@ export const DataProvider: FC<PropsWithChildren> = ({ children }) => {
         getItemById,
         addToCart,
         removeFromCart,
+        checkout,
       }}
     >
       {isReady ? (
