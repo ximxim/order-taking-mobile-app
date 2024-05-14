@@ -13,6 +13,7 @@ import {
 } from "react-admin-firebase";
 import { firebaseOptions } from "@/utils/firebase";
 import { CategoryEntity } from "@/components/admin/category";
+import { OrdersEntity } from "@/components/admin/orders";
 import { ItemEntity } from "@/components/admin/item";
 import { Route } from "react-router-dom";
 import { StoreInfo } from "@/components/admin/StoreInfo";
@@ -56,6 +57,7 @@ export default function AdminScreen() {
       >
         <Resource {...CategoryEntity} />
         <Resource {...ItemEntity} />
+        <Resource {...OrdersEntity} />
         <CustomRoutes>
           <Route path="/info" element={<StoreInfo />} />
         </CustomRoutes>
