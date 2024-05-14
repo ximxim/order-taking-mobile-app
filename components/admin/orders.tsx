@@ -1,3 +1,5 @@
+import { ORDER_STATUS } from "@/constants/OrderStatus";
+import { PAYMENT_METHODS } from "@/constants/PaymentMethods";
 import {
   ResourceProps,
   List,
@@ -19,33 +21,76 @@ import {
   SimpleFormIterator,
   BooleanInput,
   number,
+  Labeled,
+  SelectField,
+  ArrayField,
+  RadioButtonGroupInput,
 } from "react-admin";
 
 const OrdersForm = () => {
   return (
     <>
-      <ImageInput source="image" label="Image">
-        <ImageField source="src" title="title" />
-      </ImageInput>
-      <ReferenceInput source="category" reference="category">
-        <SelectInput optionText="title" fullWidth validate={[required()]} />
-      </ReferenceInput>
-      <TextInput source="label" validate={[required()]} fullWidth />
-      <TextInput source="description" fullWidth />
-      <NumberInput source="price" validate={[required(), number()]} fullWidth />
-      <ArrayInput source="variants">
-        <SimpleFormIterator fullWidth>
-          <TextInput source="type" helperText={false} fullWidth />
-          <ArrayInput source="choices">
-            <SimpleFormIterator inline>
-              <TextInput source="label" />
-              <NumberInput source="price" defaultValue={0} />
-            </SimpleFormIterator>
-          </ArrayInput>
-          <BooleanInput source="allowMultiple" helperText={false} fullWidth />
-          <BooleanInput source="isRequired" helperText={false} fullWidth />
-        </SimpleFormIterator>
-      </ArrayInput>
+      <Labeled>
+        <TextField source="firstName" />
+      </Labeled>
+      <Labeled>
+        <TextField source="lastName" />
+      </Labeled>
+      <Labeled>
+        <TextField source="phone" />
+      </Labeled>
+      <Labeled>
+        <TextField source="email" />
+      </Labeled>
+      {/* <ChipField source="status" /> */}
+      <Labeled>
+        <NumberField
+          source="total"
+          options={{
+            style: "currency",
+            currency: "CAD",
+          }}
+        />
+      </Labeled>
+      <Labeled>
+        <DateField source="pickupTime" showTime label="Pickup" />
+      </Labeled>
+      <Labeled>
+        <TextField source="comments" />
+      </Labeled>
+      <Labeled>
+        <SelectField source="paymentMethod" choices={PAYMENT_METHODS} />
+      </Labeled>
+
+      <RadioButtonGroupInput source="status" choices={ORDER_STATUS} />
+
+      <ArrayField source="lines">
+        <Datagrid bulkActionButtons={false}>
+          <TextField source="label" />
+          <TextField source="instructions" />
+          <NumberField
+            source="price"
+            options={{
+              style: "currency",
+              currency: "CAD",
+            }}
+          />
+          <NumberField source="quantity" />
+          <ArrayField source="value">
+            <Datagrid bulkActionButtons={false}>
+              <TextField source="variant" />
+              <TextField source="value" />
+              <NumberField
+                source="price"
+                options={{
+                  style: "currency",
+                  currency: "CAD",
+                }}
+              />
+            </Datagrid>
+          </ArrayField>
+        </Datagrid>
+      </ArrayField>
     </>
   );
 };
