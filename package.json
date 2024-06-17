@@ -27,6 +27,7 @@
     "expo-system-ui": "~2.9.3",
     "expo-web-browser": "~12.8.2",
     "firebase": "^9.23.0",
+    "moment": "^2.30.1",
     "react": "18.2.0",
     "react-admin": "^4.16.14",
     "react-admin-firebase": "^4.1.3",
